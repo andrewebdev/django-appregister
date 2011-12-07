@@ -1,5 +1,5 @@
 from django.db import models
-from appregister.base import Registry
+from appregister.base import Registry, AutoRegistry
 
 
 class Question(models.Model):
@@ -25,3 +25,19 @@ class QuestionRegistry(Registry):
 registry = QuestionRegistry()
 registry.register(BooleanQuestion)
 registry.register(MultipleChoiceQuestion)
+
+
+class AutoQuestion(object):
+    pass
+
+
+class AutoQuestionRegistry(AutoRegistry):
+
+    base = 'test_appregister.models.AutoQuestion'
+    discovermodule = 'autoquestions'
+
+auto_registry = AutoQuestionRegistry()
+
+
+class AutoQuestion(AutoQuestion, auto_registry.Mixin):
+    pass

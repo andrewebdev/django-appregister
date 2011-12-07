@@ -240,3 +240,36 @@ class NamedRegistry(BaseRegistry, Mapping):
 
     def __getitem__(self, key):
         return self._registry[key]
+
+
+class AutoRegistry(Registry):
+
+    def meta(self):
+
+        this = self
+
+        class RegistryMetaClass(type):
+
+            def __new__(cls, name, bases, attrs):
+
+                super_cls = super(RegistryMetaClass, cls).__new__(cls, name, bases, attrs)
+
+                # If its the base class - skip it, we don't need to register
+                # it or validate its attributes.
+                if name == "BaseRegistryMixin" or name == this.base.__name__:
+                    return super_cls
+
+                this.register(super_cls)
+
+                return super_cls
+
+        return RegistryMetaClass
+
+    @property
+    def Mixin(self):
+
+        class BaseRegistryMixin:
+
+            __metaclass__ = self.meta()
+
+        return BaseRegistryMixin

@@ -173,6 +173,8 @@ class NamedRegistryTestCase(unittest.TestCase):
         for i in registry:
             self.assertIn(i, registry.keys())
 
+    @unittest.skipIf(sys.version_info < (2, 6),
+                     "Class decorators now supported in earlier than Python 2.6")
     def test_decorator_registry(self):
 
         from appregister import NamedRegistry
@@ -190,6 +192,20 @@ class NamedRegistryTestCase(unittest.TestCase):
         MyTestSubClass()
 
         self.assertIn(MyTestSubClass, registry.values())
+
+
+class AutoRegistryTestCase(unittest.TestCase):
+
+    def test_register(self):
+
+        from test_appregister.models import auto_registry, AutoQuestion
+
+        self.assertEqual(auto_registry.all(), set([]))
+
+        class RandomQuestion(AutoQuestion):
+            pass
+
+        self.assertEqual(auto_registry.all(), set([RandomQuestion]))
 
 
 class RegistryDefinitionTestCase(unittest.TestCase):
