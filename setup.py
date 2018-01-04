@@ -25,7 +25,7 @@ setup(
     author_email='dougal85@gmail.com',
     setup_requires=[
         'versiontools >= 1.6',
-        'django'
+        'django <= 1.9'
     ],
     test_suite="runtests.runtests",
     tests_require=test_requirements,
